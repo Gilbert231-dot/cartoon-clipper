@@ -1,0 +1,42 @@
+# Copyright-free cartoon sources for fetch_cartoons.py
+# ------------------------------------------------
+# These are PUBLIC-DOMAIN / CC-curated sources — genuinely free to post.
+# (Larva, Shaun the Sheep, etc. are copyrighted even though they have no
+# dialogue — do NOT add them here; you'll get Content ID claims.)
+#
+# type: search | playlist | channel (yt-dlp accepts all three URLs)
+sources:
+  - name: pd_cartoons_playlist
+    type: playlist
+    url: "https://www.youtube.com/playlist?list=PL-PEP3oDTy0boKsCSaMMAa7ZLQSs5mFF1"
+    max_duration: 1200
+    min_duration: 90
+
+  - name: pd_cartoons_playlist_2
+    type: playlist
+    url: "https://www.youtube.com/playlist?list=PLZc7fv7bbjfSfQv2VVFZS1BCrX0jHGYLy"
+    max_duration: 1200
+    min_duration: 90
+
+  - name: silent_comedy_cartoons
+    type: playlist
+    url: "https://www.youtube.com/playlist?list=PLW3n8FFH_Ys6RlIxbrNCtbClt3FrJ-lkN"
+    max_duration: 1200
+    min_duration: 60
+
+  - name: pd_search_1920s_cartoons
+    type: search
+    query: "public domain cartoons 1920s silent animation"
+    limit: 15
+    max_duration: 900
+    min_duration: 60
+
+  - name: cc_search_no_dialogue_cartoons
+    type: search
+    query: "creative commons cartoon animation no dialogue"
+    limit: 15
+    max_duration: 900
+    min_duration: 60
+
+# download:
+#   max_height: 720      # keep files small; cartoons don't need 4K

@@ -1,0 +1,32 @@
+# cartoon-clipper configuration
+# ==============================
+
+# Per-show clipping settings. Episodes land in episodes/<show>/ and are
+# matched here by the subfolder name. "default" applies to any show not
+# listed. Adjust intro/outro to each show's real title sequence.
+shows:
+  default:
+    intro_seconds: 3        # trim from the start (title card)
+    outro_seconds: 5        # trim from the end (credits)
+    scene_threshold: 0.35   # scene-change sensitivity, 0..1 (cartoons: 0.3-0.4)
+    min_clip_seconds: 15    # drop clips shorter than this
+    max_clip_seconds: 45    # split longer scenes into chunks this big
+
+# "Subscribe" text burned into the TOP of every clip (the black bar area).
+overlay:
+  text: "Subscribe for more videos"
+  y_fraction: 0.05          # distance from the top as a fraction of height
+  fontsize_fraction: 0.045  # text size as a fraction of height
+  color: white
+  box: true                 # semi-transparent black box behind the text
+
+# Posting / scheduling (YouTube Data API, same OAuth creds as the main
+# project). Videos are uploaded PRIVATE with a publishAt time = scheduled:
+# invisible until publishAt, then they go live automatically.
+schedule:
+  clips_per_day: 2
+  slot_hours_utc: [12, 18]  # post times (UTC)
+  privacy: private          # private + publishAt = "Scheduled" on YouTube
+  title_template: "Cartoon Clips - Episode {n}"
+  description: "Silent cartoon clips. Subscribe for more! #cartoons #shorts"
+  tags: ["cartoons", "funny", "animation", "silent"]

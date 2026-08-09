@@ -1,0 +1,98 @@
+name: Clip & Post Cartoons
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 3 * * *"   # Daily 03:30 UTC — pick up new episodes + post clips
+
+permissions:
+  contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  # PAUSE SWITCH (same pattern as the main project): add a file named
+  # AUTOMATION_PAUSED in the repo root to stop this pipeline.
+  pause-check:
+    runs-on: ubuntu-latest
+    outputs:
+      go: ${{ steps.check.outputs.go }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: check
+        run: |
+          if [ -f AUTOMATION_PAUSED ]; then
+            echo "⏸️ Automation PAUSED (AUTOMATION_PAUSED file found)."
+            echo "go=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  clip-and-post:
+    needs: pause-check
+    if: needs.pause-check.outputs.go == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set up environment variables
+        run: |
+          echo "GDRIVE_FOLDER_ID=${{ secrets.GDRIVE_FOLDER_ID }}" >> $GITHUB_ENV
+          echo "GDRIVE_API_KEY=${{ secrets.GDRIVE_API_KEY }}" >> $GITHUB_ENV
+          echo "YOUTUBE_CLIENT_ID=${{ secrets.YOUTUBE_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "YOUTUBE_CLIENT_SECRET=${{ secrets.YOUTUBE_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "YOUTUBE_REFRESH_TOKEN=${{ secrets.YOUTUBE_REFRESH_TOKEN }}" >> $GITHUB_ENV
+
+      - name: Download new episodes from Drive
+        run: |
+          python drive_episodes.py
+
+      - name: Check for episodes
+        run: |
+          if [ -z "$(find episodes -name '*.mp4' | head -1)" ]; then
+            echo "ℹ️ No episodes found (Drive not configured or nothing new)."
+          else
+            echo "✅ Episodes found:"
+            find episodes -name '*.mp4' | head -20
+          fi
+
+      - name: Clip episodes (trim intro/outro, scene-split, subscribe text)
+        run: |
+          python clip_videos.py
+
+      - name: Schedule clips on YouTube (private + publishAt)
+        run: |
+          python youtube_poster.py
+
+      - name: Push state (processed episodes, schedule, manifest)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f processed_episodes.json 2>/dev/null || true
+          git add -f schedule_state.json 2>/dev/null || true
+          git add -f clips_manifest.json 2>/dev/null || true
+          git commit -m "Update cartoon clip state after run" 2>/dev/null || echo "ℹ️ Nothing new to commit"
+          git pull --rebase origin main 2>/dev/null || true
+          git push origin main || echo "⚠️ State push failed"
+
+      - name: Cleanup big files (save runner disk)
+        run: |
+          rm -rf episodes clips

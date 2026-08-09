@@ -1,0 +1,13 @@
+episodes/
+clips/
+downloads/
+__pycache__/
+*.mp4
+.env
+assets/font.ttf
+preview.html
+# runner-pushed state (workflow force-adds these; local copies are dev artifacts)
+processed_episodes.json
+schedule_state.json
+clips_manifest.json
+
