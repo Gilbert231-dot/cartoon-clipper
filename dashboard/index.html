@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cartoon Dash — Clip Schedule</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header>
+        <div class="title-row">
+            <h1>🎬 Cartoon Dash — Clip Schedule</h1>
+            <span id="live-pill" class="pill pill-live">live</span>
+        </div>
+        <p class="subtitle">Upcoming scheduled clips for <strong id="channel-name">Cartoon_dash</strong>,
+            2 per day (slots <span id="slots"></span> UTC).
+            <span id="generated-at"></span>
+        </p>
+    </header>
+
+    <main>
+        <section class="cards" id="stat-cards">
+            <!-- populated by app.js -->
+        </section>
+
+        <section class="panel">
+            <h2>Upcoming clips <span class="hint" id="upcoming-hint"></span></h2>
+            <ul id="upcoming-list" class="clips"></ul>
+        </section>
+
+        <section class="panel">
+            <h2>Already published</h2>
+            <ul id="published-list" class="clips"></ul>
+        </section>
+
+        <section class="panel">
+            <h2>Latest pipeline runs</h2>
+            <p class="subtitle">Live from GitHub Actions.</p>
+            <ul id="run-list" class="runs"></ul>
+        </section>
+    </main>
+
+    <footer>
+        Data regenerated on every pipeline run (<code>dashboard/build_data.py</code>).
+        Schedule from <code>clips_manifest.json</code>.
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -103,6 +103,10 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+      - name: Regenerate dashboard data
+        run: |
+          python dashboard/build_data.py || echo "⚠️ dashboard data build failed"
+
       - name: Push state (processed episodes, schedule, manifest)
         run: |
           git config user.name "github-actions[bot]"
@@ -110,6 +114,7 @@ jobs:
           git add -f processed_episodes.json 2>/dev/null || true
           git add -f schedule_state.json 2>/dev/null || true
           git add -f clips_manifest.json 2>/dev/null || true
+          git add -f dashboard/data.json 2>/dev/null || true
           git commit -m "Update cartoon clip state after run" 2>/dev/null || echo "ℹ️ Nothing new to commit"
           git pull --rebase origin main 2>/dev/null || true
           git push origin main || echo "⚠️ State push failed"
