@@ -14,6 +14,7 @@ re-run youtube_setup.py and authorize with the right account.
 
 import json
 import os
+import re
 import sys
 import urllib.parse
 import urllib.request
@@ -101,7 +102,8 @@ def main():
     title = items[0]["snippet"]["title"]
     print(f"✅ This token belongs to the channel: {title}")
     print(f"   Channel ID: {items[0]['id']}")
-    if "Cartoon Dash" not in title:
+    norm = lambda s: re.sub(r"[^a-z0-9]", "", s.lower())
+    if norm(title) != "cartoondash":
         print("   ⚠️  That is NOT Cartoon Dash — you authorized with the wrong account.")
         sys.exit(2)
     print("   ✓ Matches Cartoon Dash — safe to save into the GitHub secret.")
