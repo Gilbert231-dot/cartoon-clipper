@@ -42,12 +42,17 @@ load_dotenv()
 
 
 def extract_folder_id(raw):
-    """Accept a bare ID or a full drive.google.com URL; return the ID."""
+    """Accept a bare ID or a full drive.google.com URL; return the ID.
+
+    Handles the /u/N/ multi-account form too:
+      drive.google.com/drive/folders/<ID>
+      drive.google.com/drive/u/1/folders/<ID>
+      drive.google.com/open?id=<ID>
+    """
     raw = (raw or "").strip()
-    m = re.search(r"drive\.google\.com/drive/folders/([A-Za-z0-9_-]+)", raw)
+    m = re.search(r"/folders/([A-Za-z0-9_-]+)", raw)
     if m:
         return m.group(1)
-    # also tolerate the /open?id= form
     m = re.search(r"[?&]id=([A-Za-z0-9_-]+)", raw)
     if m:
         return m.group(1)
@@ -67,6 +72,12 @@ def main():
 
     if not api_key or not folder_id:
         print("❌ Both values are required. Aborting.")
+        sys.exit(1)
+
+    if "/" in folder_id or folder_id.startswith("http"):
+        print("❌ Couldn't extract a folder ID from that input.")
+        print("   Paste the folder's URL (drive.google.com/drive/.../folders/<ID>)")
+        print("   or just the ID itself — the part after 'folders/'.")
         sys.exit(1)
 
     if not api_key.startswith("AIza"):
