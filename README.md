@@ -51,8 +51,13 @@ picks them up automatically). Optional: set per-show intro/outro in
    - `GDRIVE_FOLDER_ID` — the folder ID
    - `GDRIVE_API_KEY` — the API key
    - `YOUTUBE_CLIENT_ID`, `YOUTUBE_CLIENT_SECRET`, `YOUTUBE_REFRESH_TOKEN`
-     — **the same YouTube OAuth values as the faceless-video project**
-     (one account, both pipelines).
+     — you can reuse the faceless project's **client ID and client secret**
+     (they're app-level, safe to share). The **refresh token is NOT** — it's
+     bound to the Google account that authorized it, so it posts to THAT
+     channel. If cartoon-clipper has its own YouTube channel, regenerate the
+     token first with `python youtube_setup.py` (signed into the cartoon
+     account) and store the NEW value here. Using the faceless token would
+     upload cartoon clips to the faceless channel.
 4. **Pause switch** (optional): create a file named `AUTOMATION_PAUSED` in
    the repo root to stop the pipeline; delete it to resume.
 
@@ -74,5 +79,6 @@ slots never collide.
 | `drive_episodes.py` | workflow: download new episodes from the Drive folder |
 | `clip_videos.py` | trim intro/outro, scene-split, burn subscribe text |
 | `youtube_poster.py` | scheduled (private + publishAt) YouTube uploads |
+| `youtube_setup.py` | one-time OAuth — mint a fresh YouTube refresh token for THIS channel |
 | `config.yaml` | per-show trims, overlay text, posting cadence |
 | `.github/workflows/clip_and_post.yml` | the daily pipeline |
