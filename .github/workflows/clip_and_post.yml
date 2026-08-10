@@ -78,9 +78,30 @@ jobs:
         run: |
           python clip_videos.py
 
+      - name: Check posting switch
+        id: post-check
+        run: |
+          if [ -f POSTING_DISABLED ]; then
+            echo "⏸️ Posting DISABLED (POSTING_DISABLED file found) — clips generated, nothing uploaded."
+            echo "go=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "✅ Posting ENABLED."
+            echo "go=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Schedule clips on YouTube (private + publishAt)
+        if: steps.post-check.outputs.go == 'true'
         run: |
           python youtube_poster.py
+
+      - name: Upload clips as artifact (download & watch)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cartoon-clips
+          path: clips/
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Push state (processed episodes, schedule, manifest)
         run: |

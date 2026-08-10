@@ -27,6 +27,9 @@ schedule:
   clips_per_day: 2
   slot_hours_utc: [12, 18]  # post times (UTC)
   privacy: private          # private + publishAt = "Scheduled" on YouTube
-  title_template: "Cartoon Clips - Episode {n}"
-  description: "Silent cartoon clips. Subscribe for more! #cartoons #shorts"
-  tags: ["cartoons", "funny", "animation", "silent"]
+  title_template: "{episode} | Cartoon Clip {n}"
+  description: "Classic silent cartoon clip - no talking, all action! New clips drop every day. Subscribe for more! #cartoons #classiccartoons #animation #funny"
+  tags: ["cartoons", "classic cartoons", "funny", "animation", "silent",
+         "vintage cartoons", "public domain", "cartoon clips", "popeye",
+         "looney tunes", "felix the cat", "betty boop", "woody woodpecker",
+         "retro animation"]

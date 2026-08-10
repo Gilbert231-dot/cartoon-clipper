@@ -1,0 +1,7 @@
+POSTING DISABLED
+
+While this file exists in the repo root, the workflow generates and clips
+episodes but does NOT upload anything to YouTube (the clips are still
+available as a downloadable artifact on the run page).
+
+To re-enable posting, delete this file and push the change.

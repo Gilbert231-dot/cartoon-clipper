@@ -14,6 +14,7 @@ import datetime
 import glob
 import json
 import os
+import re
 import sys
 import time
 
@@ -65,6 +66,18 @@ def get_authenticated_service():
                         token_uri="https://oauth2.googleapis.com/token",
                         scopes=SCOPES)
     return build("youtube", "v3", credentials=creds)
+
+
+def episode_title_from_path(clip_path):
+    """'clips/default/Popeye_the_Sailor_-_Little_Swee_Pea_1936 [UTvWXh7cQB0]_clip01.mp4'
+    -> 'Popeye the Sailor - Little Swee Pea 1936' (for titles)."""
+    name = os.path.basename(clip_path)
+    name = os.path.splitext(name)[0]                            # drop .mp4
+    name = re.sub(r"_clip\d+$", "", name)                    # drop clip suffix
+    name = re.sub(r"\s*\[[A-Za-z0-9_-]+\]\s*$", "", name)  # drop trailing [videoID]
+    name = name.replace("_", " ")
+    name = re.sub(r"\s+", " ", name).strip()
+    return name[:70]
 
 
 def next_publish_at(schedule_cfg, state):
@@ -126,8 +139,11 @@ def main():
     for i, clip in enumerate(todo):
         publish_at = next_publish_at(sched, state)
         n = len(posted_ids) + i + 1
-        title = sched.get("title_template", "Cartoon Clips - Episode {n}").format(n=n)
+        episode = episode_title_from_path(clip)
+        title_tpl = sched.get("title_template", "Cartoon Clips - Episode {n}")
+        title = title_tpl.format(n=n, episode=episode)
         print(f"  [upload] {os.path.basename(clip)} -> scheduled {publish_at:%Y-%m-%d %H:%M} UTC")
+        print(f"    [title] {title}")
         try:
             vid = schedule_upload(youtube, clip, title,
                                   sched.get("description", ""),
