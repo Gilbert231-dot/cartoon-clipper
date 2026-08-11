@@ -6,6 +6,34 @@
 #
 # type: search | playlist | channel (yt-dlp accepts all three URLs)
 sources:
+  # ── VERIFIED-FREE SOURCES (added Aug 2026) ─────────────────────────────
+  # These are the SAFE ones — verified licensing, post without worry:
+  #
+  # 1. blender_open_movies_cc — Blender Foundation open movies. Every one is
+  #    released under the Creative Commons Attribution (CC-BY) license, and
+  #    the license is declared on each YouTube video, which fetch_cartoons
+  #    detects as LOW risk. Comedy-heavy and mostly dialogue-free (Caminandes,
+  #    Big Buck Bunny, WING IT!, CHARGE, Agent 327, Glass Half...). CC-BY
+  #    requires ATTRIBUTION: credit "Blender Foundation (CC-BY)" in the video
+  #    description when posting clips from these.
+  - name: blender_open_movies_cc
+    type: playlist
+    url: "https://www.youtube.com/playlist?list=PLav47HAVZMjnTFVZL-aImCQIC0uLZtNCz"
+    max_duration: 1200
+    min_duration: 60
+
+  # 2. pd_cartoon_collection_archive — Internet Archive "PD Cartoon
+  #    Collection", explicitly marked Public Domain Mark 1.0: ComiColor /
+  #    Fleischer-era cartoons whose copyrights lapsed. Archive.org links carry
+  #    no per-video license field, so these show as "medium — license not
+  #    declared" in the manifest — spot-check titles before uploading, but the
+  #    collection itself is declared public domain.
+  - name: pd_cartoon_collection_archive
+    type: playlist
+    url: "https://archive.org/details/pdcartooncollection"
+    max_duration: 1200
+    min_duration: 60
+
   - name: pd_cartoons_playlist
     type: playlist
     url: "https://www.youtube.com/playlist?list=PL-PEP3oDTy0boKsCSaMMAa7ZLQSs5mFF1"

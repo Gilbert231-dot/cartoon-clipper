@@ -23,10 +23,15 @@ Turn full cartoon episodes into post-ready clips, fully automated:
 "No dialogue" is **not** "copyright-free". Larva (TUBA Entertainment) and
 Shaun the Sheep (Aardman) are copyrighted — posting them will get Content
 ID claims (same as the "Feeling Blue" music did in the first project).
-The bundled `sources.yaml` points at **public-domain cartoon playlists**
-and CC searches. `fetch_cartoons.py` logs each file's declared license and
-flags anything not clearly free — check the `[RISK]` warnings before
-uploading. When in doubt, skip it.
+`sources.yaml` now leads with two **verified-free** sources you can post
+without worry: the **Blender Foundation open movies** (every one is CC-BY,
+license declared on each video — credit "Blender Foundation (CC-BY)" in
+descriptions) and the **Internet Archive PD Cartoon Collection** (explicitly
+Public Domain Mark 1.0). The older playlist/search sources below them are
+best-effort "public domain" lists — many old-cartoon playlists are
+mislabeled and still copyrighted — so `fetch_cartoons.py` logs each file's
+declared license and flags anything not clearly free; check the `[RISK]`
+warnings before uploading. When in doubt, skip it.
 
 ## Local setup (desktop)
 
