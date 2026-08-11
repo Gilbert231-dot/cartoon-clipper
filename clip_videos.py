@@ -192,7 +192,9 @@ def render_clip(episode, start, dur, out_path, overlay_cfg, quality_cfg):
 def process_episode(episode_path, show, cfg, processed, manifest):
     """Clip one episode; returns the number of clips produced."""
     duration = ffprobe_duration(episode_path)
-    show_cfg = cfg["shows"].get(show, cfg["shows"]["default"])
+    # Merge: a show entry may override only SOME settings (e.g. just
+    # attribution) and inherit the rest from "default".
+    show_cfg = {**cfg["shows"]["default"], **(cfg["shows"].get(show) or {})}
     start = show_cfg["intro_seconds"]
     end = max(start + 1, duration - show_cfg["outro_seconds"])
     if end - start < show_cfg["min_clip_seconds"]:
@@ -225,6 +227,7 @@ def process_episode(episode_path, show, cfg, processed, manifest):
             "start": round(c_start, 2),
             "duration": round(c_dur, 2),
             "file": out_path,
+            "attribution": show_cfg.get("attribution", ""),
         })
         print(f"    -> {out_name} ({c_start:.1f}s, {c_dur:.1f}s)")
 

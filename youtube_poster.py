@@ -142,11 +142,17 @@ def main():
         episode = episode_title_from_path(clip)
         title_tpl = sched.get("title_template", "Cartoon Clips - Episode {n}")
         title = title_tpl.format(n=n, episode=episode)
+        # CC-BY attribution recorded at clip time (per show) — appended to the
+        # description automatically, e.g. Blender Foundation credit.
+        entry = next((m for m in manifest if m.get("file") == clip), None)
+        description = sched.get("description", "")
+        if entry and entry.get("attribution"):
+            description = description + chr(10) + chr(10) + entry["attribution"]
         print(f"  [upload] {os.path.basename(clip)} -> scheduled {publish_at:%Y-%m-%d %H:%M} UTC")
         print(f"    [title] {title}")
         try:
             vid = schedule_upload(youtube, clip, title,
-                                  sched.get("description", ""),
+                                  description,
                                   sched.get("tags", []),
                                   publish_at, sched.get("privacy", "private"))
         except Exception as e:
@@ -154,7 +160,6 @@ def main():
             continue
         print(f"    [OK] scheduled -> https://youtu.be/{vid}")
         # record on the matching manifest entry if present, else append
-        entry = next((m for m in manifest if m.get("file") == clip), None)
         if entry is None:
             entry = {"clip": os.path.basename(clip), "file": clip}
             manifest.append(entry)

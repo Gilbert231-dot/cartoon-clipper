@@ -11,6 +11,13 @@ shows:
     scene_threshold: 0.35   # scene-change sensitivity, 0..1 (cartoons: 0.3-0.4)
     min_clip_seconds: 60    # every clip is at least this long (short scenes are merged)
     max_clip_seconds: 180   # split longer stretches into chunks this big
+    attribution: ""         # appended to the YouTube description for clips from this show
+  # CC-BY open movies (e.g. Blender Foundation) need credit in the description.
+  # Upload those episodes into a "blender" subfolder of the Drive folder so
+  # the workflow applies this automatically; the rest of the settings inherit
+  # from "default".
+  blender:
+    attribution: "Animation: Blender Foundation (CC-BY)"
 
 # Render quality. Old cartoons are often low-res, so clips are upscaled to a
 # standard height with lanczos + a light unsharp mask (sharpen) to reduce
