@@ -119,6 +119,23 @@ def download_video(source_name, entry, opts, manifest, max_duration, min_duratio
             return False, "download produced nothing"
 
     risk, note = license_risk(info)
+    uploaded = False
+    # Auto-upload to the Drive episodes folder if a service account is set
+    # (GDRIVE_FOLDER_ID + GDRIVE_SERVICE_ACCOUNT). Graceful if not configured
+    # or google-auth isn't installed — download-only still works.
+    if os.environ.get("GDRIVE_FOLDER_ID") and os.environ.get("GDRIVE_SERVICE_ACCOUNT"):
+        try:
+            from drive_io import upload_file
+            downloads = info.get("requested_downloads") or []
+            path = downloads[0].get("filepath") if downloads else None
+            if path and os.path.exists(path):
+                upload_file(os.environ["GDRIVE_FOLDER_ID"], path)
+                uploaded = True
+        except ImportError:
+            print("   [drive-upload] google-auth missing — run: python -m pip install -r requirements.txt")
+        except Exception as e:
+            print(f"   [drive-upload] {_safe(e)}")
+
     manifest.append({
         "title": info.get("title", ""),
         "channel": info.get("channel", ""),
@@ -127,10 +144,12 @@ def download_video(source_name, entry, opts, manifest, max_duration, min_duratio
         "license": info.get("license", ""),
         "risk": risk,
         "note": note,
+        "uploaded_to_drive": uploaded,
         "downloaded_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     })
     flag = "" if risk == "low" else f"  [RISK={risk}] {note}"
-    print(f"   [OK] {_safe(info.get('title',''))[:60]}{flag}")
+    up = "  [uploaded to Drive]" if uploaded else ""
+    print(f"   [OK] {_safe(info.get('title',''))[:60]}{flag}{up}")
     return True, "ok"
 
 
@@ -208,8 +227,11 @@ def main():
         total += process_source(s, args.max, opts, manifest_path, manifest)
 
     print(f"\n[DONE] {total} video(s) downloaded into {OUTPUT_ROOT}/")
-    print("   Next: upload the files into your Drive 'cartoon episodes' folder —")
-    print("   the GitHub workflow will clip and schedule them automatically.")
+    if os.environ.get("GDRIVE_FOLDER_ID") and os.environ.get("GDRIVE_SERVICE_ACCOUNT"):
+        print("   ✅ Auto-uploaded to the Drive episodes folder (service account configured).")
+    else:
+        print("   ℹ️  Drive auto-upload is OFF — set GDRIVE_FOLDER_ID + GDRIVE_SERVICE_ACCOUNT")
+        print("       to upload to Drive automatically; otherwise upload the files manually.")
 
 
 if __name__ == "__main__":

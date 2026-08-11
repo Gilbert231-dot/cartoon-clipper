@@ -9,8 +9,17 @@ shows:
     intro_seconds: 3        # trim from the start (title card)
     outro_seconds: 5        # trim from the end (credits)
     scene_threshold: 0.35   # scene-change sensitivity, 0..1 (cartoons: 0.3-0.4)
-    min_clip_seconds: 15    # drop clips shorter than this
-    max_clip_seconds: 45    # split longer scenes into chunks this big
+    min_clip_seconds: 60    # every clip is at least this long (short scenes are merged)
+    max_clip_seconds: 180   # split longer stretches into chunks this big
+
+# Render quality. Old cartoons are often low-res, so clips are upscaled to a
+# standard height with lanczos + a light unsharp mask (sharpen) to reduce
+# softness, then encoded at a high CRF. target_height 0 = keep source size.
+quality:
+  target_height: 1080       # upscale every clip to this height (lanczos)
+  sharpen: 0.4              # unsharp amount (0 = off) — helps low-res sources
+  crf: 17
+  preset: slow
 
 # "Subscribe" text burned into the TOP of every clip (the black bar area).
 overlay:

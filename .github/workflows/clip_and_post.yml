@@ -57,6 +57,7 @@ jobs:
         run: |
           echo "GDRIVE_FOLDER_ID=${{ secrets.GDRIVE_FOLDER_ID }}" >> $GITHUB_ENV
           echo "GDRIVE_API_KEY=${{ secrets.GDRIVE_API_KEY }}" >> $GITHUB_ENV
+          echo "GDRIVE_SERVICE_ACCOUNT=${{ secrets.GDRIVE_SERVICE_ACCOUNT }}" >> $GITHUB_ENV
           echo "YOUTUBE_CLIENT_ID=${{ secrets.YOUTUBE_CLIENT_ID }}" >> $GITHUB_ENV
           echo "YOUTUBE_CLIENT_SECRET=${{ secrets.YOUTUBE_CLIENT_SECRET }}" >> $GITHUB_ENV
           echo "YOUTUBE_REFRESH_TOKEN=${{ secrets.YOUTUBE_REFRESH_TOKEN }}" >> $GITHUB_ENV
@@ -93,6 +94,15 @@ jobs:
         if: steps.post-check.outputs.go == 'true'
         run: |
           python youtube_poster.py
+
+      # Runs only when posting was enabled (and succeeded — a failed posting
+      # step stops the job first), so used episodes are removed from Drive
+      # only once their clips are safely up. Requires the GDRIVE_SERVICE_ACCOUNT
+      # secret; skips gracefully if it isn't configured yet.
+      - name: Delete used episodes from Drive
+        if: steps.post-check.outputs.go == 'true'
+        run: |
+          python drive_episodes.py --delete-used
 
       - name: Upload clips as artifact (download & watch)
         if: always()

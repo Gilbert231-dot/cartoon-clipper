@@ -10,6 +10,7 @@ Requires env: GDRIVE_FOLDER_ID (public folder, "Anyone with the link") and
 GDRIVE_API_KEY (Google Cloud key with Drive API enabled).
 """
 
+import argparse
 import json
 import os
 import re
@@ -73,7 +74,52 @@ def download(file_id, dest):
     gdown.download(url, dest, quiet=True)
 
 
+def delete_used():
+    """Delete episodes from the Drive folder once they've been clipped.
+
+    Uses the service account (GDRIVE_SERVICE_ACCOUNT) so the folder stays
+    lean — a used episode is removed before the next batch is uploaded.
+    Graceful if the service account isn't configured yet.
+    """
+    if not DRIVE_FOLDER_ID:
+        print("[drive-episodes] GDRIVE_FOLDER_ID not set — skipping delete-used.")
+        return
+    try:
+        from drive_io import delete_file, get_token, list_all
+    except ImportError:
+        print("[drive-episodes] google-auth missing — skipping delete-used.")
+        return
+    token = get_token()
+    if not token:
+        print("[drive-episodes] GDRIVE_SERVICE_ACCOUNT not configured — skipping delete-used.")
+        return
+    processed = load_json(PROCESSED_FILE, {})
+    names = {fn for fns in processed.values() for fn in fns}
+    if not names:
+        print("[drive-episodes] no processed episodes to clean up.")
+        return
+    entries = list_all(DRIVE_FOLDER_ID, token)
+    deleted = 0
+    for fid, name in entries:
+        if name.split("/")[-1] in names:
+            try:
+                delete_file(fid, token)
+                deleted += 1
+                print(f"  [deleted] {name}")
+            except Exception as e:
+                print(f"  [error] {name}: {_safe(e)}")
+    print(f"[drive-episodes] deleted {deleted} used episode(s) from Drive")
+
+
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--delete-used", action="store_true",
+                    help="delete already-clipped episodes from the Drive folder")
+    args = ap.parse_args()
+    if args.delete_used:
+        delete_used()
+        return
+
     if not (DRIVE_FOLDER_ID and GDRIVE_API_KEY):
         print("[drive-episodes] GDRIVE_FOLDER_ID/GDRIVE_API_KEY not set — skipping download.")
         return

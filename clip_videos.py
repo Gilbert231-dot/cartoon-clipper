@@ -111,33 +111,53 @@ def detect_scene_cuts(video_path, start, end, threshold):
 
 
 def build_clip_ranges(start, end, cuts, min_sec, max_sec):
-    """[(start, duration), ...] from scene boundaries, honoring min/max."""
+    """[(start, duration), ...] — every clip at least min_sec long.
+
+    Scene boundaries become clip boundaries, but short scenes (the norm in
+    cartoons) are MERGED together until a clip reaches min_sec, and long
+    stretches are chunked to max_sec. So clips come out in roughly
+    [min_sec, max_sec] instead of dropping everything shorter than min_sec.
+    """
     points = sorted({start, end} | {c for c in cuts if start < c < end})
-    ranges = []
+    # individual pieces, oversized scenes chunked to <= max_sec
+    pieces = []
     for a, b in zip(points, points[1:]):
         dur = b - a
-        if dur < min_sec:
+        while dur > max_sec:
+            pieces.append((a, max_sec))
+            a += max_sec
+            dur -= max_sec
+        if dur > 0:
+            pieces.append((a, dur))
+
+    ranges = []
+    cur_start, cur_dur = None, 0.0
+    for a, dur in pieces:
+        if cur_start is None:
+            cur_start, cur_dur = a, dur
             continue
-        if dur > max_sec:
-            # split into max_sec chunks; a short tail is merged into the
-            # previous chunk instead of emitting a trash clip
-            while dur >= max_sec:
-                ranges.append((a, max_sec))
-                a += max_sec
-                dur -= max_sec
-            if dur > 0:
-                if dur >= min_sec:
-                    ranges.append((a, dur))
-                elif ranges:
-                    pa, pd = ranges[-1]
-                    ranges[-1] = (pa, pd + dur)
+        # adding this piece would exceed max_sec -> finalize the current clip
+        if cur_dur + dur > max_sec:
+            if cur_dur >= min_sec:
+                ranges.append((cur_start, cur_dur))
+            cur_start, cur_dur = a, dur
         else:
-            ranges.append((a, dur))
+            cur_dur += dur
+    if cur_start is not None:
+        if cur_dur >= min_sec:
+            ranges.append((cur_start, cur_dur))
+        elif ranges:
+            # small leftover: fold into the previous clip ONLY if it fits
+            # within max_sec; otherwise drop it (it's < min_sec at the very
+            # end — not worth an oversized clip).
+            ps, pd = ranges[-1]
+            if pd + cur_dur <= max_sec:
+                ranges[-1] = (ps, pd + cur_dur)
     return ranges
 
 
-def render_clip(episode, start, dur, out_path, overlay_cfg):
-    """Extract one clip with the subscribe text burned into the top."""
+def render_clip(episode, start, dur, out_path, overlay_cfg, quality_cfg):
+    """Extract one clip, upscaled + sharpened, subscribe text on top."""
     text = overlay_cfg.get("text", "Subscribe for more videos").replace("'", "")
     font = resolve_font()
     y = overlay_cfg.get("y_fraction", 0.05)
@@ -148,9 +168,20 @@ def render_clip(episode, start, dur, out_path, overlay_cfg):
                 f":box=1:boxcolor=black@0.35:boxborderw=10")
     if font:
         drawtext += f":fontfile={font}"
+
+    # Upcale to a standard height with lanczos + a light unsharp mask so the
+    # clips are crisp even from low-res (often 480p/720p) cartoon sources.
+    height = int(quality_cfg.get("target_height", 1080))
+    sharpen = float(quality_cfg.get("sharpen", 0.4))
+    vf = f"scale=-2:{height}:flags=lanczos" if height > 0 else "null"
+    if vf != "null" and sharpen:
+        vf += f",unsharp=5:5:{sharpen}:5:5:0.0"
+    vf = f"{vf},{drawtext}" if vf != "null" else drawtext
+
     cmd = ["ffmpeg", "-y", "-ss", str(start), "-i", episode,
-           "-t", str(dur), "-vf", drawtext,
-           "-c:v", "libx264", "-crf", "18", "-preset", "medium",
+           "-t", str(dur), "-vf", vf,
+           "-c:v", "libx264", "-crf", str(quality_cfg.get("crf", 17)),
+           "-preset", quality_cfg.get("preset", "slow"),
            "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart",
            out_path]
     p = subprocess.run(cmd, capture_output=True, text=True)
@@ -185,7 +216,8 @@ def process_episode(episode_path, show, cfg, processed, manifest):
         out_name = f"{base}_clip{i:02d}.mp4"
         out_path = os.path.join(CLIPS_DIR, show, out_name)
         os.makedirs(os.path.dirname(out_path), exist_ok=True)
-        render_clip(episode_path, c_start, c_dur, out_path, cfg["overlay"])
+        render_clip(episode_path, c_start, c_dur, out_path, cfg["overlay"],
+                    cfg.get("quality", {}))
         manifest.append({
             "clip": out_name,
             "episode": os.path.basename(episode_path),
