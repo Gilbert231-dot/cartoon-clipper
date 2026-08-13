@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T05:15:32Z",
+  "generated_at": "2026-08-13T05:19:03Z",
   "channel": "Cartoon_dash",
   "slots": [
     "12:00",
@@ -7,25 +7,11 @@
   ],
   "clips_per_day": 2,
   "total_clips": 25,
-  "scheduled_count": 23,
-  "published_count": 2,
-  "next_publish_utc": "2026-08-12T12:00:00Z",
-  "last_publish_utc": "2026-08-11T18:00:00Z",
+  "scheduled_count": 21,
+  "published_count": 4,
+  "next_publish_utc": "2026-08-13T12:00:00Z",
+  "last_publish_utc": "2026-08-12T18:00:00Z",
   "upcoming": [
-    {
-      "episode": "PUBLIC DOMAIN CARTOONS Falling Hare 1943 - Merrie Melodies HD 1080p",
-      "clip": "PUBLIC_DOMAIN_CARTOONS_Falling_Hare_1943_-_Merrie_Melodies_HD_1080p [dOWoT5gwHkY]_clip03.mp4",
-      "duration": 17,
-      "publish_at": "2026-08-12T12:00:00Z",
-      "url": "https://youtu.be/4Wx0SuI9JXU"
-    },
-    {
-      "episode": "PUBLIC DOMAIN CARTOONS Falling Hare 1943 - Merrie Melodies HD 1080p",
-      "clip": "PUBLIC_DOMAIN_CARTOONS_Falling_Hare_1943_-_Merrie_Melodies_HD_1080p [dOWoT5gwHkY]_clip04.mp4",
-      "duration": 45,
-      "publish_at": "2026-08-12T18:00:00Z",
-      "url": "https://youtu.be/OzW5SFHn5iU"
-    },
     {
       "episode": "PUBLIC DOMAIN CARTOONS Falling Hare 1943 - Merrie Melodies HD 1080p",
       "clip": "PUBLIC_DOMAIN_CARTOONS_Falling_Hare_1943_-_Merrie_Melodies_HD_1080p [dOWoT5gwHkY]_clip05.mp4",
@@ -188,6 +174,20 @@
       "duration": 39,
       "publish_at": "2026-08-11T18:00:00Z",
       "url": "https://youtu.be/A7TDdxqLEUA"
+    },
+    {
+      "episode": "PUBLIC DOMAIN CARTOONS Falling Hare 1943 - Merrie Melodies HD 1080p",
+      "clip": "PUBLIC_DOMAIN_CARTOONS_Falling_Hare_1943_-_Merrie_Melodies_HD_1080p [dOWoT5gwHkY]_clip03.mp4",
+      "duration": 17,
+      "publish_at": "2026-08-12T12:00:00Z",
+      "url": "https://youtu.be/4Wx0SuI9JXU"
+    },
+    {
+      "episode": "PUBLIC DOMAIN CARTOONS Falling Hare 1943 - Merrie Melodies HD 1080p",
+      "clip": "PUBLIC_DOMAIN_CARTOONS_Falling_Hare_1943_-_Merrie_Melodies_HD_1080p [dOWoT5gwHkY]_clip04.mp4",
+      "duration": 45,
+      "publish_at": "2026-08-12T18:00:00Z",
+      "url": "https://youtu.be/OzW5SFHn5iU"
     }
   ]
 }
