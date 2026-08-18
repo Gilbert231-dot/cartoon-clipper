@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17T04:12:35Z",
+  "generated_at": "2026-08-18T04:08:51Z",
   "channel": "Cartoon_dash",
   "slots": [
     "12:00",
@@ -7,25 +7,11 @@
   ],
   "clips_per_day": 2,
   "total_clips": 25,
-  "scheduled_count": 13,
-  "published_count": 12,
-  "next_publish_utc": "2026-08-17T12:00:00Z",
-  "last_publish_utc": "2026-08-16T18:00:00Z",
+  "scheduled_count": 11,
+  "published_count": 14,
+  "next_publish_utc": "2026-08-18T12:00:00Z",
+  "last_publish_utc": "2026-08-17T18:00:00Z",
   "upcoming": [
-    {
-      "episode": "Popeye The Sailor - Insect To Injury 1956 Full Cartoon Turner Print 480p SD",
-      "clip": "Popeye_The_Sailor_-_Insect_To_Injury_1956_Full_Cartoon_Turner_Print_480p_SD [_ZAVEIXBR3Y]_clip04.mp4",
-      "duration": 21,
-      "publish_at": "2026-08-17T12:00:00Z",
-      "url": "https://youtu.be/jmor5e23H5w"
-    },
-    {
-      "episode": "Popeye the Sailor - Little Swee Pea 1936",
-      "clip": "Popeye_the_Sailor_-_Little_Swee_Pea_1936 [UTvWXh7cQB0]_clip01.mp4",
-      "duration": 45,
-      "publish_at": "2026-08-17T18:00:00Z",
-      "url": "https://youtu.be/FefJAVE96mQ"
-    },
     {
       "episode": "Popeye the Sailor - Little Swee Pea 1936",
       "clip": "Popeye_the_Sailor_-_Little_Swee_Pea_1936 [UTvWXh7cQB0]_clip02.mp4",
@@ -188,6 +174,20 @@
       "duration": 16,
       "publish_at": "2026-08-16T18:00:00Z",
       "url": "https://youtu.be/5OlEM3VEAKg"
+    },
+    {
+      "episode": "Popeye The Sailor - Insect To Injury 1956 Full Cartoon Turner Print 480p SD",
+      "clip": "Popeye_The_Sailor_-_Insect_To_Injury_1956_Full_Cartoon_Turner_Print_480p_SD [_ZAVEIXBR3Y]_clip04.mp4",
+      "duration": 21,
+      "publish_at": "2026-08-17T12:00:00Z",
+      "url": "https://youtu.be/jmor5e23H5w"
+    },
+    {
+      "episode": "Popeye the Sailor - Little Swee Pea 1936",
+      "clip": "Popeye_the_Sailor_-_Little_Swee_Pea_1936 [UTvWXh7cQB0]_clip01.mp4",
+      "duration": 45,
+      "publish_at": "2026-08-17T18:00:00Z",
+      "url": "https://youtu.be/FefJAVE96mQ"
     }
   ]
 }
