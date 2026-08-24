@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-23T04:10:24Z",
+  "generated_at": "2026-08-24T04:22:23Z",
   "channel": "Cartoon_dash",
   "slots": [
     "12:00",
@@ -7,19 +7,11 @@
   ],
   "clips_per_day": 2,
   "total_clips": 25,
-  "scheduled_count": 1,
-  "published_count": 24,
-  "next_publish_utc": "2026-08-23T12:00:00Z",
-  "last_publish_utc": "2026-08-22T18:00:00Z",
-  "upcoming": [
-    {
-      "episode": "Popeye the Sailor - Little Swee Pea 1936",
-      "clip": "Popeye_the_Sailor_-_Little_Swee_Pea_1936 [UTvWXh7cQB0]_clip12.mp4",
-      "duration": 21,
-      "publish_at": "2026-08-23T12:00:00Z",
-      "url": "https://youtu.be/khQNaz7pB5k"
-    }
-  ],
+  "scheduled_count": 0,
+  "published_count": 25,
+  "next_publish_utc": null,
+  "last_publish_utc": "2026-08-23T12:00:00Z",
+  "upcoming": [],
   "published": [
     {
       "episode": "PUBLIC DOMAIN CARTOONS Falling Hare 1943 - Merrie Melodies HD 1080p",
@@ -188,6 +180,13 @@
       "duration": 22,
       "publish_at": "2026-08-22T18:00:00Z",
       "url": "https://youtu.be/Ic28eF2yuHU"
+    },
+    {
+      "episode": "Popeye the Sailor - Little Swee Pea 1936",
+      "clip": "Popeye_the_Sailor_-_Little_Swee_Pea_1936 [UTvWXh7cQB0]_clip12.mp4",
+      "duration": 21,
+      "publish_at": "2026-08-23T12:00:00Z",
+      "url": "https://youtu.be/khQNaz7pB5k"
     }
   ]
 }
